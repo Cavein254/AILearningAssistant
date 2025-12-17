@@ -126,7 +126,37 @@ export const getDocuments = async (req, res, next) => {
 
 export const getDocument = async (req, res, next) => {
     try{
-        
+        const document = await Document.findOne({
+            _id: req.params.id,
+            userId: req.user._id,
+        })
+
+        if(!document){
+            return res.status(404).json({
+                success: false,
+                message: "Document not found",
+                statusCode: 404,
+            })
+        }
+
+        const [flashcardCount, quizCount] = await Promise.all([
+            Flashcard.countDocuments({ documentId: document._id, userId: req.user._id }),
+            Quiz.countDocuments({ documentId: document._id, userId: req.user._id })
+        ]);
+
+        await Document.updateOne(
+            { _id: document._id },
+            { $set: { lastAccessedAt: new Date() } }
+        );
+
+        const documentData = document.toObject();
+        documentData.flashcardCount = flashcardCount;
+        documentData.quizCount = quizCount;
+
+        return res.status(200).json({
+            success: true,
+            data: documentData,
+        })
     }catch(error){
         next(error);
     }
@@ -134,16 +164,40 @@ export const getDocument = async (req, res, next) => {
 
 export const deleteDocument = async (req, res, next) => {
     try{
-        
+        const document = await Document.findOne({
+            _id: req.params.id,
+            userId: req.user._id,
+        })
+
+        if(!document){
+            return res.status(404).json({
+                success: false,
+                message: "Document not found",
+                statusCode: 404,
+            })
+        }
+
+        await fs.unlink(document.filePath).catch(() => {})
+
+        await document.deleteOne();
+
+        await Flashcard.deleteMany({
+            documentId: document._id,
+            userId: req.user._id,
+        })
+
+        await Quiz.deleteMany({
+            documentId: document._id,
+            userId: req.user._id,
+        })
+
+        return res.status(200).json({
+            success: true,
+            message: "Document deleted successfully",
+            statusCode: 200,
+        })
     }catch(error){
         next(error);
     }
 }
 
-export const updateDocument = async (req, res, next) => {
-    try{
-        
-    }catch(error){
-        next(error);
-    }
-}
