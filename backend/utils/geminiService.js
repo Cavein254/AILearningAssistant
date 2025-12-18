@@ -87,9 +87,13 @@ export const generateQuiz = async (text, numQuestions=5) => {
     Separate each question with "---".
     
     Text:
-    ${text.subString(0,15000)}
+    ${text.substring(0,15000)}
     `
     try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash-lite",
+            contents: prompt,
+        });
         const generatedText = response.text;
 
         const questions = [];

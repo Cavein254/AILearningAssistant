@@ -61,7 +61,49 @@ export const generateFlashcards = async (req, res, next) => {
 
 export const generateQuiz = async (req, res, next) => {
     try {
+        const {documentId, numQuestions=10, title} = req.body;
+
+        if(!documentId) {
+            return res.status(400).json({
+                success: false,
+                message: "Document ID is required",
+                statusCode: 400
+            })
+        }
+
+        const document = await Document.findOne({
+            _id: documentId,
+            userId: req.user._id,
+            status:'ready'
+        });
+
+        if(!document) {
+            return res.status(404).json({
+                success: false,
+                message: "Document not found or not ready",
+                statusCode: 404
+            })
+        }
+
+        const questions = await geminiService.generateQuiz(
+            document.extractedText,
+            parseInt(numQuestions),
+        );
         
+        const quiz = await Quiz.create({
+            userId: req.user._id,
+            documentId: document._id,
+            questions,
+            title: title || `${document.title} - Quiz`,
+            totalQuestions: questions.length,
+            score:0,
+        })
+
+        return res.status(201).json({
+            success: true,
+            message: "Quiz generated successfully",
+            data: quiz
+        })
     } catch (error) {
         next(error)
     }
@@ -69,7 +111,37 @@ export const generateQuiz = async (req, res, next) => {
 
 export const generateSummary = async (req, res, next) => {
     try {
-        
+        const {documentId} = req.body;
+
+        if(!documentId) {
+            return res.status(400).json({
+                success: false,
+                message: "Document ID is required",
+                statusCode: 400
+            })
+        }
+
+        const document = await Document.findOne({
+            _id: documentId,
+            userId: req.user._id,
+            status:'ready'
+        });
+
+        if(!document) {
+            return res.status(404).json({
+                success: false,
+                message: "Document not found or not ready",
+                statusCode: 404
+            })
+        }
+
+        const summary = await geminiService.generateSummary(document.extractedText);
+
+        return res.status(201).json({
+            success: true,
+            message: "Summary generated successfully",
+            data: summary
+        })
     } catch (error) {
         next(error)
     }
