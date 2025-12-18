@@ -145,7 +145,7 @@ export const findRelevantChunks = (chunks, query, maxChunks = 3) => {
 
         return {
             content: chunk.content,
-            chunkIndex: chunk.chunkIndex,
+            chunkIndex: chunk.chunkIndex ?? index,
             pageNumber: chunk.pageNumber,
             _id: chunk._id,
             score: normalizedScore * positionBonus,

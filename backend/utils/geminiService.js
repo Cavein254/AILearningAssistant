@@ -173,9 +173,9 @@ export const generateSummary = async (text) => {
 
 
 export const chatWithContext = async (question, chunks) => {
-    const context = chunks.map((c,i) => `[Chunk ${i+1}]: \n ${c}`).join("\n\n");
+    const context = chunks.map((c,i) => `[Chunk ${i+1}]\n${c.content}`).join("\n\n");
 
-    console.log("context _____", context)
+    console.log(context)
     const prompt = `You are a helpful assistant that can answer questions based on the provided context.
     
     Context:

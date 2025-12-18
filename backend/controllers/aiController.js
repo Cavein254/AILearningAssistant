@@ -139,8 +139,11 @@ export const generateSummary = async (req, res, next) => {
 
         return res.status(201).json({
             success: true,
+            data: {
+                title: document.title,
+                summary,
+            },
             message: "Summary generated successfully",
-            data: summary
         })
     } catch (error) {
         next(error)
@@ -149,7 +152,76 @@ export const generateSummary = async (req, res, next) => {
 
 export const chat = async (req, res, next) => {
     try {
-        
+        const {documentId, question} = req.body;
+
+        if(!documentId || !question) {
+            return res.status(400).json({
+                success: false,
+                message: "Document ID and question are required",
+                statusCode: 400
+            })
+        }
+
+        const document = await Document.findOne({
+            _id: documentId,
+            userId: req.user._id,
+            status:'ready'
+        });
+
+        if(!document) {
+            return res.status(404).json({
+                success: false,
+                message: "Document not found or not ready",
+                statusCode: 404
+            })
+        }
+
+       const relevantChunks = findRelevantChunks(document.chunks, question, 3);
+       const chunkIndices = relevantChunks.map(c => c.chunkIndex);
+
+       let chatHistory = await ChatHistory.findOne({
+           documentId: document._id,
+           userId: req.user._id,
+       })
+
+       if(!chatHistory) {
+           chatHistory = await ChatHistory.create({
+               documentId: document._id,
+               userId: req.user._id,
+               messages: [],
+           })
+       }
+
+
+       const answer = await geminiService.chatWithContext(question, relevantChunks);
+
+       chatHistory.messages.push(
+        {
+           role: "user",
+           content: question,
+           timestamp: new Date(),
+           relevantChunks:[]
+       },
+       {
+           role: "assistant",
+           content: answer,
+           timestamp: new Date(),
+           relevantChunks: chunkIndices,
+       }
+    )
+
+       await chatHistory.save();
+
+       return res.status(200).json({
+           success: true,
+           data: {
+               question,
+               answer,
+               relevantChunks: chunkIndices,
+               chatHistoryId: chatHistory._id,
+           },
+           message: "Chat completed successfully",
+       })
     } catch (error) {
         next(error)
     }
