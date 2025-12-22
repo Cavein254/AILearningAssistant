@@ -33,13 +33,13 @@ export const getDashboard = async (req, res, next) => {
         const recentDocuments = await Document.find({userId})
         .sort({createdAt: -1})
         .limit(5)
-        .select("title fileName lastAccessed status");
+        .select("title filename lastAccessedAt status");
 
         const recentQuizzes = await Quiz.find({userId})
         .sort({createdAt: -1})
         .limit(5)
         .populate("documentId", "title")
-        .select("title score totalQuestions createdAt");
+        .select("title score totalQuestions completedAt");
 
         const studyStreak = Math.floor(Math.random() * 7) + 1;
 
