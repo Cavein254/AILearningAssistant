@@ -22,9 +22,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuthStatus = () => {
     try {
       const token = localStorage.getItem("token");
-      if (token && userStr) {
-        const userData = JSON.parse(userStr);
-        setUser(userData);
+      if (token && user) {
         setIsAuthenticated(true);
       }
     } catch (error) {
