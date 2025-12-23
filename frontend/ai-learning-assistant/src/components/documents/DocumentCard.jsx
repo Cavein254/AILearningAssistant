@@ -55,11 +55,11 @@ const DocumentCard = ({ document, onDelete }) => {
         {/* Content Section */}
         <div className="space-y-2 mb-6">
           <h3 className="text-lg font-bold text-slate-900 leading-tight line-clamp-2 group-hover:text-emerald-700 transition-colors">
-            {document.title}
+            {document?.title}
           </h3>
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-md">
-              {document.fileSize ? formatFileSize(document.fileSize) : "N/A"}
+              {document?.fileSize ? formatFileSize(document?.fileSize) : "N/A"}
             </span>
           </div>
         </div>
@@ -68,7 +68,7 @@ const DocumentCard = ({ document, onDelete }) => {
         <div className="space-y-4 pt-4 border-t border-slate-100">
           {/* Stats Row */}
           <div className="flex flex-wrap gap-4 text-slate-500">
-            {document.flashcardCount > 0 && (
+            {document?.flashcardCount > 0 && (
               <div className="flex items-center gap-1.5">
                 <BookOpen
                   size={14}
@@ -76,11 +76,11 @@ const DocumentCard = ({ document, onDelete }) => {
                   strokeWidth={2.5}
                 />
                 <span className="text-xs font-bold">
-                  {document.flashcardCount} Flashcards
+                  {document?.flashcardCount} Flashcards
                 </span>
               </div>
             )}
-            {document.quizCount !== undefined && (
+            {document?.quizCount !== undefined && (
               <div className="flex items-center gap-1.5">
                 <BrainCircuit
                   size={14}
@@ -88,7 +88,7 @@ const DocumentCard = ({ document, onDelete }) => {
                   strokeWidth={2.5}
                 />
                 <span className="text-xs font-bold">
-                  {document.quizCount} Quizzes
+                  {document?.quizCount} Quizzes
                 </span>
               </div>
             )}
@@ -98,7 +98,7 @@ const DocumentCard = ({ document, onDelete }) => {
           <div className="flex items-center gap-1.5 text-slate-400">
             <Clock size={12} strokeWidth={2.5} />
             <span className="text-[11px] font-bold uppercase tracking-tight">
-              Uploaded {moment(document.createdAt).fromNow()}
+              Uploaded {moment(document?.createdAt).fromNow()}
             </span>
           </div>
         </div>

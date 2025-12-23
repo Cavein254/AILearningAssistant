@@ -34,11 +34,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
-
-app.use(errorHandler);
 
 app.use('/api/auth', authRoutes)
 app.use('/api/documents', documentRoutes)
@@ -46,6 +45,8 @@ app.use('/api/flashcards', flashcardRoutes)
 app.use('/api/progress', progressRoutes)
 app.use('/api/ai', aiRoutes)
 app.use('/api/quizzes', quizzesRoutes)
+
+app.use(errorHandler);
 
 app.use((req, res) => {
     res.status(404).json({
