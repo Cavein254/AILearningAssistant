@@ -68,3 +68,6 @@ const aiService = {
     explainConcept,
     getChatHistory
 }
+
+
+export default aiService

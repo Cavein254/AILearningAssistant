@@ -12,7 +12,7 @@ if(!process.env.GEMINI_API_KEY) {
 
 
 export const generateFlashcards = async (text, count=10) => {
-    const prompt = `Generate ${count} educational flashcards for the following text.
+    const prompt = `As a graduate teacher, generate ${count} educational flashcards for the following text for a master student.
     Format each flashcard as:
     Q: [Clear, specific question]
     A: [Clear, specific answer]
@@ -73,7 +73,7 @@ export const generateFlashcards = async (text, count=10) => {
 }
 
 export const generateQuiz = async (text, numQuestions=5) => {
-    const prompt = `Generate exactly ${numQuestions} multiple choicequestions for the following text.
+    const prompt = `As a graduate teacher, generate exactly ${numQuestions} multiple choicequestions for the following text for a master student.
     Format each question as:
     Q: [Question]
     01: [Option]
@@ -150,8 +150,8 @@ export const generateQuiz = async (text, numQuestions=5) => {
 
 
 export const generateSummary = async (text) => {
-    const prompt = `provide a concise summary of the following text, highlighting the key concepts,
-    main ideas, and any important details. Keep the summary clear and structured.
+    const prompt = `As a graduate teacher, provide a concise summary of the following text, highlighting the key concepts,
+    main ideas, and any important details. Keep the summary clear and structured for a master student to understand.
     
     Text:
     ${text.substring(0, 20000)}`;
@@ -175,7 +175,7 @@ export const generateSummary = async (text) => {
 export const chatWithContext = async (question, chunks) => {
     const context = chunks.map((c,i) => `[Chunk ${i+1}]\n${c.content}`).join("\n\n");
 
-    const prompt = `You are a helpful assistant that can answer questions based on the provided context.
+    const prompt = `You are a helpful graduate teacher assistant that can answer questions based on the provided context for a master student.
     
     Context:
     ${context}
@@ -203,9 +203,9 @@ export const chatWithContext = async (question, chunks) => {
 }
 
 export const explainConcept = async (concept) => {
-    const prompt = `Explain the concept of "${concept}" based on the following context.
-    Provide a clear, educational relevantexplanation that is easy to understand and structured manner.
-    Include any relevant examples or real-world applications.
+    const prompt = `As a graduate teacher, explain the concept of "${concept}" based on the following context.
+    Provide a clear, educational relevant explanation that is easy to understand and structured manner.
+    Include any relevant examples or real-world applications for a master student.
     
     Context:
     ${concept.substring(0, 15000)}

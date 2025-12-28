@@ -8,15 +8,19 @@ const Tabs = ({ tabs, activeTab, setActiveTab }) => {
           <button
             key={tab.name}
             onClick={() => setActiveTab(tab.name)}
-            className={`relative pb-4 px-6 text-sm font-semibold transition-all duration-200 ${
+            className={`relative pb-4 md:px-6 px-2 text-sm font-semibold transition-all duration-200 ${
               activeTab === tab.name
                 ? "text-emerald-600"
                 : "text-slate-700 hover:text-slate-900"
             }`}
           >
-            <span className="">{tab.label}</span>
-            {activeTab === tab.name && <div className="" />}
-            {activeTab === tab.name && <div className="" />}
+            <span className="relative z-10">{tab.label}</span>
+            {activeTab === tab.name && (
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-emerald-600 to-emerald-500 h-1" />
+            )}
+            {activeTab === tab.name && (
+              <div className="absolute insert-0 bg-gradient-to-r from-emerald-50/50 to-transparent rounded-t-xl -z-10" />
+            )}
           </button>
         ))}
       </nav>
@@ -24,7 +28,7 @@ const Tabs = ({ tabs, activeTab, setActiveTab }) => {
         {tabs.map((tab) => {
           if (tab.name === activeTab) {
             return (
-              <div key={tab.name} className="">
+              <div key={tab.name} className="animate-in fade-in duration-300">
                 {tab.content}
               </div>
             );

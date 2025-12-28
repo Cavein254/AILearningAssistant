@@ -8,7 +8,7 @@ const Spinner = ({ size = "sm", className = "" }) => {
   return (
     <div className={`${sizes[size]} ${className} relative`}>
       <svg
-        className="animate-spin text-white"
+        className="animate-spin text-emerald-500"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
